@@ -2,6 +2,7 @@
 
 I tried to compare multi-stage build to the usual single stage build on a simple python application.
 
+
 ### Build Multi-Stage (SLIM) Image
 ![alt text](image.png)
 
