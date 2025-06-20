@@ -1,17 +1,14 @@
-# --- Stage 1: Build Stage ---
-FROM node:16 as builder
-
+FROM python:3.12-slim AS builder
 WORKDIR /app
+COPY requirements.txt .
+RUN python -m venv /env && /env/bin/pip install -r requirements.txt
+COPY app.py .
 
-COPY package*.json ./
-RUN npm install
 
-COPY . .
-RUN npm run build
 
-# --- Stage 2: Production Stage ---
-FROM nginx:stable-alpine
-
-COPY --from=builder /app/build /usr/share/nginx/html
-
-EXPOSE 80
+FROM python:3.12-alpine
+WORKDIR /app
+COPY --from=builder /app /app
+COPY --from=builder /env /env
+ENV PATH="/env/bin:$PATH"
+ENTRYPOINT ["python", "app.py"]
